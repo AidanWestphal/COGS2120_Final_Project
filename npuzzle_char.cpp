@@ -68,7 +68,8 @@ bool DFS(string &n, const string &sol, set<string> &visited, int &count, unsigne
   count++;
   if (n == sol) {
     return true;
-  } else if (!visited.insert(n).second) {
+  } 
+  else if (!visited.insert(n).second) {
     return false;
   }
   // Find Hole
@@ -267,6 +268,11 @@ bool UserPlay(const string &n, const string &sol, unsigned int rows, unsigned in
     if(num == -1) {
       return false;
     }
+    if(num == 0) {
+      cout << "ERROR: Cannot move 0, pick a different number." << endl;
+      count--;
+      continue;
+    }
     // Find number
     int n_r = -1;
     int n_c = -1;
@@ -346,12 +352,51 @@ int main() {
   print_grid(solution,rows,cols);
 
 
+  // MONTE CARLO CODE:
+  // int num_trials = 1000;
+  // int DFS_success = 0;
+  // int DFS_moves = 0;
+  // int BFS_success = 0;
+  // int BFS_moves = 0;
+  // bool DFS_fail;
+  // bool BFS_fail;
+  // for(int i = 0; i < num_trials; i++) {
+  //   generate_random(solution, rows, cols);
+  //   generate_random(start, rows, cols);
+  //   DFS_fail = false;
+  //   BFS_fail = false;
+  //   int d = 0;
+  //   int b = 0;
+  //   visited.clear();
+  //   DFS_fail = DFS(start, solution, visited, d, rows, cols);
+  //   visited.clear();
+  //   BFS_fail = BFS(start, solution, visited, b, rows, cols);
+  //   if(DFS_fail) {
+  //    DFS_moves += d;
+  //    DFS_success += 1;
+  //   }
+  //   if(BFS_fail) {
+  //     BFS_moves += b;
+  //     BFS_success += 1;
+  //   }
+  // }
+  // cout << "MONTE CARLO DATA: " << endl;
+  // cout << "BFS SUCCESS COUNT: " << BFS_success << " AVERAGE MOVES: " << (double)BFS_moves/BFS_success << endl;
+  // cout << "DFS SUCCESS COUNT: " << DFS_success << " AVERAGE MOVES: " << (double)DFS_moves/DFS_success << endl;
+
+
+
+  // NORMAL RUN CODE: 
   UserPlay(start,solution,rows,cols);
   int BFS_Count = 0;
   int DFS_Count = 0;
   visited.clear();
-  DFS(start, solution, visited, DFS_Count, rows, cols);
+  bool DFS_fail = false;
+  bool BFS_fail = false;
+  DFS_fail = DFS(start, solution, visited, DFS_Count, rows, cols);
   visited.clear();
-  BFS(start, solution, visited, BFS_Count, rows, cols);
+  BFS_fail = BFS(start, solution, visited, BFS_Count, rows, cols);
+
   cout << "DFS: " << DFS_Count << endl << "BFS: " << BFS_Count << endl;
+  cout << "SUCCESS? DFS: " << DFS_fail << " BFS: " << BFS_fail << endl;
 }
